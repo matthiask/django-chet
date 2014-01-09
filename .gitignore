@@ -1,0 +1,13 @@
+*.pyc
+*~
+.*.swp
+\#*#
+.DS_Store
+._*
+data.db
+/MANIFEST
+/dist
+/docs/_build
+/venv
+.sass-cache
+django_chet.egg-info
