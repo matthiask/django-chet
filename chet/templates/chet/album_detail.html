@@ -9,10 +9,12 @@
   <h2>{{ album.title }}</h2>
   {{ post.html|safe }}
 
-  <ul class="large-block-grid-4">
+  <ul class="clearing-thumbs large-block-grid-4" data-clearing>
     {% for photo in photos %}
-      <li>
-        <img src="{{ photo.file.url }}" alt="">
+      <li class="{% if photo.is_dark %}dark{% endif %}">
+        <a href="{{ photo.file.url }}">
+          <img src="{{ photo.file.url }}" alt="">
+        </a>
       </li>
     {% endfor %}
   </ul>
@@ -29,5 +31,18 @@
       {% endif %}
     </small>
   </p>
+
+  <script>
+    onReady.push(function($) {
+      $(document.body).on('click', '.clearing-thumbs li', function() {
+        var bg = $('.clearing-blackout');
+        if ($(this).hasClass('dark')) {
+          bg.addClass('light');
+        } else {
+          bg.removeClass('light');
+        }
+      });
+    });
+  </script>
 
 {% endblock %}
