@@ -37,6 +37,7 @@ setup(
     },
     install_requires=[
         'Django>=1.4.2',
+        'easy-thumbnails>=1.4',
     ],
     classifiers=[
         # 'Development Status :: 5 - Production/Stable',
