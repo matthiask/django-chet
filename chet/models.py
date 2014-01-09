@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from easy_thumbnails.fields import ThumbnailerImageField
+
 
 class VisibilityModel(models.Model):
     is_active = models.BooleanField(_('is active'), default=True)
@@ -62,7 +64,7 @@ class PhotoManager(models.Manager):
 
 class Photo(VisibilityModel):
     created_on = models.DateTimeField(_('created on'), default=timezone.now)
-    file = models.ImageField(_('file'), upload_to='chet/photos/%Y/%m/')
+    file = ThumbnailerImageField(_('file'), upload_to='chet/photos/%Y/%m/')
 
     album = models.ForeignKey(
         Album, verbose_name=_('album'), related_name='photos')
