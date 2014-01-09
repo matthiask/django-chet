@@ -78,8 +78,8 @@ class Photo(VisibilityModel):
     objects = PhotoManager()
 
     class Meta:
-        get_latest_by = 'created_on'
-        ordering = ['-created_on']
+        get_latest_by = 'shot_on'
+        ordering = ['-shot_on']
         verbose_name = _('photo')
         verbose_name_plural = _('photos')
 
