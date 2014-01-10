@@ -9,7 +9,7 @@
   <h2>{{ album.title }}</h2>
   {{ post.html|safe }}
 
-  <ul class="clearing-thumbs large-block-grid-4" data-clearing>
+  <ul class="large-block-grid-4">
     {% for photo in photos %}
       <li class="{% if photo.is_dark %}dark{% endif %}">
         <a href="{{ photo.file.url }}">
