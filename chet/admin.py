@@ -21,7 +21,6 @@ class AlbumAdmin(admin.ModelAdmin):
 
 class PhotoAdmin(admin.ModelAdmin):
     date_hierarchy = 'shot_on'
-    # TODO add thumb
     list_display = (
         'thumbnail', 'title', 'shot_on', 'is_active', 'is_public', 'is_dark')
     list_editable = ('title', 'shot_on', 'is_active', 'is_public', 'is_dark')
