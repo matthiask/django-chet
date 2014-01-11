@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 
 from easy_thumbnails.files import get_thumbnailer
 
@@ -7,11 +8,15 @@ from chet.models import Album, Photo
 
 class AlbumAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
-    list_display = ('title', 'date', 'is_active', 'is_public')
+    list_display = ('title', 'date', 'is_active', 'is_public', 'photos')
     list_editable = ('is_active', 'is_public')
     list_filter = ('is_active', 'is_public')
     prepopulated_fields = {'slug': ('title',)}
     search_fields = ('title',)
+
+    def photos(self, instance):
+        return instance.photos.count()
+    photos.short_description = _('photos')
 
 
 class PhotoAdmin(admin.ModelAdmin):
