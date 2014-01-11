@@ -9,15 +9,17 @@
   <h2>{{ album.title }}</h2>
   {{ post.html|safe }}
 
-  <ul class="large-block-grid-4">
-    {% for photo in photos %}
-      <li class="{% if photo.is_dark %}dark{% endif %}">
-        <a href="{{ photo.file.url }}">
-          <img src="{{ photo.file.url }}" alt="">
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+  <div class="gallery">
+    <ul class="large-block-grid-4">
+      {% for photo in photos %}
+        <li class="{% if not photo.is_dark %}light{% endif %}">
+          <a href="{{ photo.file.url }}" title="{{ photo }}">
+            <img src="{{ photo.file.url }}" alt="">
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 
   <p>
     <small>
@@ -34,14 +36,96 @@
 
   <script>
     onReady.push(function($) {
-      $(document.body).on('click', '.clearing-thumbs li', function() {
-        var bg = $('.clearing-blackout');
-        if ($(this).hasClass('dark')) {
-          bg.addClass('light');
-        } else {
-          bg.removeClass('light');
+      var Gallery = {
+        gallery: $('.gallery'),
+
+        showGalleryOverlay: function(show) {
+          if (show) {
+            this.gallery.css('height', this.gallery.height());
+            this.gallery.addClass('open');
+
+            var self = this;
+
+            $(document.body).on('keydown.gallery', function(e) {
+              if (e.keyCode == 27) {
+                self.showGalleryOverlay(false);
+
+              } else if (e.keyCode == 37) {
+                self.previous();
+
+              } else if (e.keyCode == 39) {
+                self.next();
+
+              }
+
+              console.log(e);
+            });
+          } else {
+            this.deactivateCurrent();
+            this.gallery.css('height', 'auto');
+            this.gallery.removeClass('open');
+
+            $(document.body).off('keydown.gallery');
+          }
+        },
+
+        deactivateCurrent: function() {
+          this.gallery.find('.current')
+            .removeClass('current')
+            .css('background-image', 'none');
+
+          this.gallery.find('.caption').remove();
+        },
+
+        activate: function(element) {
+          var $el = $(element),
+            $a = $el.find('a');
+
+          this.deactivateCurrent();
+          $el.addClass('current');
+          $a.css('background-image', 'url(' + $a.attr('href') + ')');
+
+          $el.append('<span class="caption">' + $a.attr('title') + '</span>');
+        },
+
+        next: function() {
+          console.log('next');
+          var current = this.gallery.find('.current'),
+            next = current.next();
+
+          if (next.length) {
+            this.activate(next);
+          }
+        },
+
+        previous: function() {
+          console.log('prev');
+          var current = this.gallery.find('.current'),
+            prev = current.prev();
+
+          if (prev.length) {
+            this.activate(prev);
+          }
+        },
+
+        initialize: function() {
+          var self = this;
+
+          this.gallery.on('click', 'li', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (self.gallery.hasClass('open')) {
+              self.showGalleryOverlay(false);
+            } else {
+              self.showGalleryOverlay(true);
+              self.activate(this);
+            }
+          });
         }
-      });
+      };
+
+      Gallery.initialize();
     });
   </script>
 
