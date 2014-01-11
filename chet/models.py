@@ -1,3 +1,5 @@
+import os
+
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
@@ -84,7 +86,7 @@ class Photo(VisibilityModel):
         verbose_name_plural = _('photos')
 
     def __unicode__(self):
-        return self.title or self.file.name
+        return self.title or os.path.basename(self.file.name)
 
     def get_absolute_url(self):
         return reverse('chet_photo_detail', kwargs={
