@@ -24,7 +24,7 @@ class PhotoAdmin(admin.ModelAdmin):
     # TODO add thumb
     list_display = (
         'thumbnail', 'title', 'shot_on', 'is_active', 'is_public', 'is_dark')
-    list_editable = ('is_active', 'is_public', 'is_dark')
+    list_editable = ('title', 'shot_on', 'is_active', 'is_public', 'is_dark')
     list_filter = ('is_active', 'is_public', 'is_dark', 'album')
     search_fields = ('title',)
 
