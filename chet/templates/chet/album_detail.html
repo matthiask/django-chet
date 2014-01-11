@@ -1,6 +1,6 @@
 {% extends "chet/base.html" %}
 
-{% load i18n %}
+{% load i18n thumbnail %}
 {% load url from future %}
 
 {% block title %}{{ post.title }} - {{ block.super }}{% endblock %}
@@ -13,8 +13,8 @@
     <ul class="large-block-grid-4">
       {% for photo in photos %}
         <li class="{% if not photo.is_dark %}light{% endif %}">
-          <a href="{{ photo.file.url }}" title="{{ photo }}">
-            <img src="{{ photo.file.url }}" alt="">
+          <a href="{% thumbnail photo.file 1500x1500 quality=90 %}" title="{{ photo }}">
+            <img src="{% thumbnail photo.file 300x300 crop quality=90 %}" alt="">
           </a>
         </li>
       {% endfor %}
