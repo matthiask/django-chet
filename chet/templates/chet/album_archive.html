@@ -1,15 +1,19 @@
 {% extends "chet/base.html" %}
 
+{% load i18n %}
+
+{% block title %}{% trans "photos"|capfirst %} - {{ block.super }}{% endblock %}
+
 {% block content %}
-{% for post in object_list %}
-  {% ifchanged post.published_on.date|date:"FY" %}
+{% for album in object_list %}
+  {% ifchanged album.date|date:"FY" %}
     <p>
       <hr>
-      <small>{{ post.published_on.date|date:"F Y" }}</small>
+      <small>{{ album.date|date:"F Y" }}</small>
     </p>
   {% endifchanged %}
-  <h2><a href="{{ post.get_absolute_url }}">
-    {{ post.title }}</a></h2>
+  <h2><a href="{{ album.get_absolute_url }}">
+    {{ album.title }}</a></h2>
 {% endfor %}
 
 {% if page_obj.has_other_pages %}
