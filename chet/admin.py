@@ -1,9 +1,15 @@
 from __future__ import unicode_literals
 
+from django import forms
+from django.conf.urls import patterns, url
 from django.contrib import admin
+from django.contrib.admin.options import unquote  # util/utils really...
 from django.contrib.admin.widgets import AdminFileWidget
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpResponse
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.http import require_POST
 
 from easy_thumbnails.files import get_thumbnailer
 
@@ -30,12 +36,17 @@ class PhotoFileWidget(AdminFileWidget):
 class PhotoInline(admin.TabularInline):
     model = Photo
     fields = ('file', 'title', 'shot_on', 'is_active', 'is_public', 'is_dark')
+    extra = 0
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'file':
             kwargs['widget'] = PhotoFileWidget
         return super(PhotoInline, self).formfield_for_dbfield(
             db_field, **kwargs)
+
+
+class UploadForm(forms.Form):
+    file = forms.FileField()
 
 
 class AlbumAdmin(admin.ModelAdmin):
@@ -46,6 +57,40 @@ class AlbumAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'is_public')
     prepopulated_fields = {'slug': ('title',)}
     search_fields = ('title',)
+
+    def get_urls(self):
+        return patterns(
+            '',
+            url(
+                r'^(?P<object_id>\d+)/upload/$',
+                require_POST(self.admin_site.admin_view(self.upload)),
+            ),
+        ) + super(AlbumAdmin, self).get_urls()
+
+    def upload(self, request, object_id):
+        obj = self.get_object(request, unquote(object_id))
+
+        if not self.has_change_permission(request, obj):
+            raise PermissionDenied
+
+        if obj is None:
+            raise Http404
+
+        form = UploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            photo = Photo(
+                album=obj,
+                file=form.cleaned_data['file'],
+            )
+
+            # TODO look into EXIF infos for determining `shot_on`
+            if not photo.shot_on:
+                photo.shot_on = obj.date
+
+            photo.save()
+
+        return HttpResponse('Thanks')
+
 
     def photos(self, instance):
         return instance.photos.count()

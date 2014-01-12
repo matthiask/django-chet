@@ -1,0 +1,38 @@
+{% extends "admin/change_form.html" %}
+
+{% load i18n staticfiles %}
+
+{% block content %}
+{{ block.super }}
+{% if original and original.pk %}
+
+<style>
+.dz-clickable {
+  clear: both;
+}
+.dz-default {
+  border: 1px solid #eee;
+  padding: 20px;
+  margin: 20px 0 0 0;
+  cursor: pointer;
+}
+</style>
+<script src="{% static 'chet/dropzone.js' %}"></script>
+<script>
+Dropzone.autoDiscover = false;
+django.jQuery(function() {
+  new Dropzone('#album-photo-upload', {
+    acceptedFiles: 'image/*'
+  });
+});
+</script>
+
+<form action="upload/" method="post"
+    id="album-photo-upload"
+    class="dropzone"
+    enctype="multipart/form-data">
+  {% csrf_token %}
+</form>
+
+{% endif %}
+{% endblock %}
