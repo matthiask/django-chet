@@ -81,7 +81,7 @@ class Photo(VisibilityModel):
 
     class Meta:
         get_latest_by = 'shot_on'
-        ordering = ['-shot_on']
+        ordering = ['shot_on']
         verbose_name = _('photo')
         verbose_name_plural = _('photos')
 
