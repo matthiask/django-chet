@@ -14,7 +14,7 @@
       {% for photo in photos %}
         <li class="{% if not photo.is_dark %}light{% endif %}">
           <a href="{% thumbnail photo.file 1500x1500 quality=90 %}" title="{{ photo }}">
-            <img src="{% thumbnail photo.file 300x300 crop quality=90 %}" alt="">
+            <img src="{% thumbnail photo.file 400x400 crop quality=90 %}" alt="">
           </a>
         </li>
       {% endfor %}
