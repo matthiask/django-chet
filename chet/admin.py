@@ -94,7 +94,6 @@ class AlbumAdmin(admin.ModelAdmin):
 
         return HttpResponse('Thanks')
 
-
     def photos(self, instance):
         return instance.photos.count()
     photos.short_description = _('photos')
