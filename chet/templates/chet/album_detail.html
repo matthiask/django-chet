@@ -23,13 +23,9 @@
 
   <p>
     <small>
-      {% blocktrans with author=post.author published_on=post.published_on|date:"d.m.Y" %}
-        Published on {{ published_on }}{% endblocktrans %}
-      | {% for category in post.categories.all %}
-        <a href="{{ category.get_absolute_url }}">{{ category }}</a>{% if not forloop.last %},{% endif %}
-      {% endfor %}
+      {{ album.date|date:"F Y" }}
       {% if user.is_staff %}
-        | <a href="{% url 'admin:blog_post_change' post.pk as bla %}" target="_blank">edit</a>
+        | <a href="{% url 'admin:chet_album_change' album.pk %}" target="_blank">edit</a>
       {% endif %}
     </small>
   </p>
