@@ -13,6 +13,7 @@ from django.views.decorators.http import require_POST
 
 from easy_thumbnails.files import get_thumbnailer
 
+from chet.exif import read_shot_on
 from chet.models import Album, Photo
 
 
@@ -81,13 +82,15 @@ class AlbumAdmin(admin.ModelAdmin):
             photo = Photo(
                 album=obj,
                 file=form.cleaned_data['file'],
+                shot_on=obj.date,
+                is_public=obj.is_public,
             )
-
-            # TODO look into EXIF infos for determining `shot_on`
-            if not photo.shot_on:
-                photo.shot_on = obj.date
-
             photo.save()
+
+            shot_on = read_shot_on(photo.file)
+            if shot_on:
+                photo.shot_on = shot_on
+                photo.save(update_fields=['shot_on'])
 
         return HttpResponse('Thanks')
 
