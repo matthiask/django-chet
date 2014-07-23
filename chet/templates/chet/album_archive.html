@@ -5,6 +5,7 @@
 {% block title %}{% trans "photos"|capfirst %} - {{ block.super }}{% endblock %}
 
 {% block content %}
+<h1>{% trans "photos"|capfirst %}</h1>
 {% for album in object_list %}
   {% ifchanged album.date|date:"FY" %}
     <p>
